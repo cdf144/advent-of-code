@@ -1,10 +1,11 @@
 package main
 
 import (
-	"cdf144/aoc2021/utils"
 	"fmt"
 	"path/filepath"
 	"strings"
+
+	"cdf144/aoc2021/utils"
 )
 
 func main() {

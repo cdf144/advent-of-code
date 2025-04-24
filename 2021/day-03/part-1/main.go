@@ -1,13 +1,14 @@
 package main
 
 import (
-	"cdf144/aoc2021/utils"
 	"fmt"
 	"log"
 	"path/filepath"
 	"strconv"
 	"strings"
 	"unicode/utf8"
+
+	"cdf144/aoc2021/utils"
 )
 
 func main() {

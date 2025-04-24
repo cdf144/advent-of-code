@@ -1,11 +1,12 @@
 package main
 
 import (
-	"cdf144/aoc2021/utils"
 	"fmt"
 	"log"
 	"path/filepath"
 	"strconv"
+
+	"cdf144/aoc2021/utils"
 )
 
 func calculateFrequency(slice []string, index int) map[byte]int {

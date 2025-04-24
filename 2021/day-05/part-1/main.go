@@ -1,9 +1,10 @@
 package main
 
 import (
-	"cdf144/aoc2021/utils"
 	"fmt"
 	"path/filepath"
+
+	"cdf144/aoc2021/utils"
 )
 
 type Vent struct {

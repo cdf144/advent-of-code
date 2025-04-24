@@ -1,8 +1,9 @@
 package main
 
 import (
-	"cdf144/aoc2021/utils"
 	"path/filepath"
+
+	"cdf144/aoc2021/utils"
 )
 
 func main() {
