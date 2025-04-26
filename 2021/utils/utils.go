@@ -37,7 +37,7 @@ func Init(path string) ([]string, func(s any)) {
 // The path parameter specifies the location of the input file. If the path is
 // relative, it is resolved relative to the directory of the calling function's
 // source file. If the path is absolute, it is used directly.
-func InitRaw(path string) ([]string, func(s any)) {
+func InitRaw(path string) (string, func(s any)) {
 	if !filepath.IsAbs(path) {
 		_, filename, _, ok := runtime.Caller(1)
 		if !ok {
@@ -47,10 +47,10 @@ func InitRaw(path string) ([]string, func(s any)) {
 		path = filepath.Join(dir, path)
 	}
 
-	lines := readInputRaw(path)
+	content := readInputRaw(path)
 	printAnswer := makePrintAnswerFunc()
 
-	return strings.Split(lines, "\n"), printAnswer
+	return content, printAnswer
 }
 
 // Filter takes a slice of any type and a function.
