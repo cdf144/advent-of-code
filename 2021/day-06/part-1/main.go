@@ -1,9 +1,10 @@
 package main
 
 import (
-	"cdf144/aoc2021/utils"
 	"path/filepath"
 	"strings"
+
+	"cdf144/aoc2021/utils"
 )
 
 func updateLanternfishes(lanternfishes *[]int) {
