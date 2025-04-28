@@ -9,6 +9,11 @@ import (
 	"strings"
 )
 
+// SignedNumber is a constraint that permits any signed integer or floating-point type.
+type SignedNumber interface {
+	~int | ~int8 | ~int16 | ~int32 | ~int64 | ~float32 | ~float64
+}
+
 // Init reads input lines from a specified file path and returns them along with a
 // function to print the answer.
 //
@@ -71,6 +76,17 @@ func Filter[T any](slice []T, f func(T) bool) []T {
 // converted to an integer.
 func Atoi(s string) int {
 	return UnwrapInt(strconv.Atoi(s))
+}
+
+// Abs returns the absolute value of the given number.
+// It works for any signed integer or floating-point type.
+//
+// This function exists because having to recast twice to use math.Abs is yucky.
+func Abs[T SignedNumber](i T) T {
+	if i < 0 {
+		return -i
+	}
+	return i
 }
 
 func UnwrapString(s string, err error) string {
