@@ -2,23 +2,23 @@ package main
 
 import (
 	"path/filepath"
-	"strconv"
+	"slices"
 	"strings"
 
 	"cdf144/aoc2021/utils"
 )
 
-var displayToDigit = map[string]int{
-	"1110111": 0,
-	"0010010": 1,
-	"1011101": 2,
-	"1011011": 3,
-	"0111010": 4,
-	"1101011": 5,
-	"1101111": 6,
-	"1010010": 7,
-	"1111111": 8,
-	"1111011": 9,
+var displayToDigit = map[string]string{
+	"abcefg":  "0",
+	"cf":      "1",
+	"acdeg":   "2",
+	"acdfg":   "3",
+	"bcdf":    "4",
+	"abdfg":   "5",
+	"abdefg":  "6",
+	"acf":     "7",
+	"abcdefg": "8",
+	"abcdfg":  "9",
 }
 
 func findOutputValue(line string) int {
@@ -26,9 +26,10 @@ func findOutputValue(line string) int {
 	signalPatterns := strings.Fields(parts[0])
 	outputDigits := strings.Fields(parts[1])
 
-	signalToSegment := make(map[string]int)
+	signalToSegment := make(map[string]string)
 
-	// Signals which map to segment 3 (c) and 6 (f)
+	// Signals which map to segment c and f
+	// Analyze pattern for digit 1 and do frequency analysis
 	for _, pattern := range signalPatterns {
 		if len(pattern) == 2 {
 			split := strings.Split(pattern, "")
@@ -37,38 +38,39 @@ func findOutputValue(line string) int {
 			signal2Freq := countFrequency(signal2, signalPatterns)
 
 			if signal1Freq == 8 {
-				signalToSegment[signal1] = 2
-				signalToSegment[signal2] = 5
+				signalToSegment[signal1] = "c"
+				signalToSegment[signal2] = "f"
 			} else if signal2Freq == 8 {
-				signalToSegment[signal1] = 5
-				signalToSegment[signal2] = 2
+				signalToSegment[signal1] = "f"
+				signalToSegment[signal2] = "c"
 			}
 
 			break
 		}
 	}
 
-	// Signal which maps to segment 1 (a)
+	// Signal which maps to segment a
+	// Digit 7 has two overlapping segments with digit 1 so we can isolate the third segment
 findSignalA:
 	for _, pattern := range signalPatterns {
 		if len(pattern) == 3 {
 			for signal := range strings.SplitSeq(pattern, "") {
 				_, ok := signalToSegment[signal]
 				if !ok {
-					signalToSegment[signal] = 0
+					signalToSegment[signal] = "a"
 					break findSignalA
 				}
 			}
 		}
 	}
 
-	// Signals which map to segment 2 (b) and 4 (d)
+	// Signals which map to segment b and d
+	// Digit 4 has two overlapping segments with digit 1 so we isolate the other two
+	// segments and do frequency analysis
 	for _, pattern := range signalPatterns {
 		if len(pattern) == 4 {
 			split := strings.Split(pattern, "")
 			unmapped1, unmapped2 := "", ""
-			signalToSegment[unmapped1] = 5
-			signalToSegment[unmapped2] = 7
 
 			for _, signal := range split {
 				_, ok := signalToSegment[signal]
@@ -85,19 +87,22 @@ findSignalA:
 			unmapped2Freq := countFrequency(unmapped2, signalPatterns)
 
 			if unmapped1Freq == 6 {
-				signalToSegment[unmapped1] = 1
-				signalToSegment[unmapped2] = 3
+				signalToSegment[unmapped1] = "b"
+				signalToSegment[unmapped2] = "d"
 			} else if unmapped2Freq == 6 {
-				signalToSegment[unmapped1] = 3
-				signalToSegment[unmapped2] = 1
+				signalToSegment[unmapped1] = "d"
+				signalToSegment[unmapped2] = "b"
 			}
 
 			break
 		}
 	}
 
-	// Signals which map to segment 5 (e) and 7 (g)
+	// Signals which map to segment e and g
+	// All segment mappings are done except for e and g. We can isolate the two
+	// remaining segments and do frequency analysis.
 	for _, pattern := range signalPatterns {
+		// Digit 8 is the last with unique number of segments so I just use it
 		if len(pattern) == 7 {
 			split := strings.Split(pattern, "")
 			unmapped1, unmapped2 := "", ""
@@ -117,11 +122,11 @@ findSignalA:
 			unmapped2Freq := countFrequency(unmapped2, signalPatterns)
 
 			if unmapped1Freq == 4 {
-				signalToSegment[unmapped1] = 4
-				signalToSegment[unmapped2] = 6
+				signalToSegment[unmapped1] = "e"
+				signalToSegment[unmapped2] = "g"
 			} else if unmapped2Freq == 4 {
-				signalToSegment[unmapped1] = 6
-				signalToSegment[unmapped2] = 4
+				signalToSegment[unmapped1] = "g"
+				signalToSegment[unmapped2] = "e"
 			}
 
 			break
@@ -129,21 +134,19 @@ findSignalA:
 	}
 
 	// Map done (finally)
-	resultStr := ""
+	resultStr := strings.Builder{}
 
 	for _, digit := range outputDigits {
-		display := []string{"0", "0", "0", "0", "0", "0", "0"}
-
-		for signal := range strings.SplitSeq(digit, "") {
-			display[signalToSegment[signal]] = "1"
+		display := make([]string, len(digit))
+		for i, signal := range strings.Split(digit, "") {
+			display[i] = signalToSegment[signal]
 		}
 
-		resultStr += strconv.Itoa(
-			displayToDigit[strings.Join(display, "")],
-		)
+		slices.Sort(display)
+		resultStr.WriteString(displayToDigit[strings.Join(display, "")])
 	}
 
-	return utils.Atoi(resultStr)
+	return utils.Atoi(resultStr.String())
 }
 
 func countFrequency(signal string, signalPatterns []string) int {
@@ -157,7 +160,7 @@ func countFrequency(signal string, signalPatterns []string) int {
 }
 
 func main() {
-	lines, printAnswer := utils.Init(filepath.Join("..", "input.txt"))
+	lines, printAnswer := utils.Init(filepath.Join("..", "input.example.txt"))
 
 	var answer int
 
