@@ -7,44 +7,13 @@ import (
 	"cdf144/aoc2021/utils"
 )
 
-type Vent struct {
+type vent struct {
 	startX, startY int
 	endX, endY     int
 }
 
-func (v Vent) isHorizontal() bool {
+func (v vent) isHorizontal() bool {
 	return v.startY == v.endY
-}
-
-func findBorder(vents []Vent) (int, int) {
-	maxX, maxY := 0, 0
-	for _, vent := range vents {
-		if vent.startX > maxX {
-			maxX = vent.startX
-		}
-		if vent.endX > maxX {
-			maxX = vent.endX
-		}
-		if vent.startY > maxY {
-			maxY = vent.startY
-		}
-		if vent.endY > maxY {
-			maxY = vent.endY
-		}
-	}
-	return maxX, maxY
-}
-
-func drawVent(v Vent, diagram [][]int) {
-	if v.isHorizontal() {
-		for x := min(v.startX, v.endX); x <= max(v.startX, v.endX); x++ {
-			diagram[v.startY][x]++
-		}
-	} else {
-		for y := min(v.startY, v.endY); y <= max(v.startY, v.endY); y++ {
-			diagram[y][v.startX]++
-		}
-	}
 }
 
 func main() {
@@ -56,12 +25,12 @@ func main() {
 		return startX == endX || startY == endY
 	})
 
-	vents := make([]Vent, len(lines))
+	vents := make([]vent, len(lines))
 
 	for i, line := range lines {
 		var startX, startY, endX, endY int
 		fmt.Sscanf(line, "%d,%d -> %d,%d", &startX, &startY, &endX, &endY)
-		vents[i] = Vent{startX, startY, endX, endY}
+		vents[i] = vent{startX, startY, endX, endY}
 	}
 
 	maxX, maxY := findBorder(vents)
@@ -85,4 +54,35 @@ func main() {
 	}
 
 	printAnswer(overlaps)
+}
+
+func findBorder(vents []vent) (int, int) {
+	maxX, maxY := 0, 0
+	for _, vent := range vents {
+		if vent.startX > maxX {
+			maxX = vent.startX
+		}
+		if vent.endX > maxX {
+			maxX = vent.endX
+		}
+		if vent.startY > maxY {
+			maxY = vent.startY
+		}
+		if vent.endY > maxY {
+			maxY = vent.endY
+		}
+	}
+	return maxX, maxY
+}
+
+func drawVent(v vent, diagram [][]int) {
+	if v.isHorizontal() {
+		for x := min(v.startX, v.endX); x <= max(v.startX, v.endX); x++ {
+			diagram[v.startY][x]++
+		}
+	} else {
+		for y := min(v.startY, v.endY); y <= max(v.startY, v.endY); y++ {
+			diagram[y][v.startX]++
+		}
+	}
 }

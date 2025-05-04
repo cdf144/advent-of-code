@@ -7,17 +7,6 @@ import (
 	"cdf144/aoc2021/utils"
 )
 
-func updateLanternfishes(lanternfishes map[int]uint64) {
-	produced := lanternfishes[0]
-
-	for i := range 8 {
-		lanternfishes[i] = lanternfishes[i+1]
-	}
-
-	lanternfishes[6] += produced
-	lanternfishes[8] = produced
-}
-
 func main() {
 	input, printAnswer := utils.InitRaw(filepath.Join("..", "input.example.txt"))
 	inputSplit := strings.Split(strings.TrimRight(input, "\r\n"), ",")
@@ -40,4 +29,15 @@ func main() {
 	}
 
 	printAnswer(answer)
+}
+
+func updateLanternfishes(lanternfishes map[int]uint64) {
+	produced := lanternfishes[0]
+
+	for i := range 8 {
+		lanternfishes[i] = lanternfishes[i+1]
+	}
+
+	lanternfishes[6] += produced
+	lanternfishes[8] = produced
 }

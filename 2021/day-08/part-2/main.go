@@ -21,6 +21,17 @@ var displayToDigit = map[string]rune{
 	"abcdfg":  '9',
 }
 
+func main() {
+	lines, printAnswer := utils.Init(filepath.Join("..", "input.example.txt"))
+
+	var answer int
+	for _, line := range lines {
+		answer += findOutputValue(line)
+	}
+
+	printAnswer(answer)
+}
+
 func findOutputValue(entry string) int {
 	parts := strings.Split(entry, " | ")
 	signalPatterns := strings.Fields(parts[0])
@@ -107,15 +118,4 @@ func findPatternByLength(signalPatterns []string, length int) string {
 		}
 	}
 	return ""
-}
-
-func main() {
-	lines, printAnswer := utils.Init(filepath.Join("..", "input.example.txt"))
-
-	var answer int
-	for _, line := range lines {
-		answer += findOutputValue(line)
-	}
-
-	printAnswer(answer)
 }

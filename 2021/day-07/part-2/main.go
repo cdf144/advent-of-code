@@ -7,15 +7,6 @@ import (
 	"cdf144/aoc2021/utils"
 )
 
-func calculateFuel(crabs []int, position int) int {
-	fuel := 0
-	for _, crab := range crabs {
-		distance := utils.Abs(crab - position)
-		fuel += (distance * (distance + 1)) / 2
-	}
-	return fuel
-}
-
 func main() {
 	input, printAnswer := utils.InitRaw(filepath.Join("..", "input.example.txt"))
 
@@ -44,4 +35,13 @@ func main() {
 			calculateFuel(crabs, int(mean+1)),
 		),
 	)
+}
+
+func calculateFuel(crabs []int, position int) int {
+	fuel := 0
+	for _, crab := range crabs {
+		distance := utils.Abs(crab - position)
+		fuel += (distance * (distance + 1)) / 2
+	}
+	return fuel
 }
