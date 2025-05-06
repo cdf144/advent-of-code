@@ -17,23 +17,8 @@ func main() {
 		}
 	}
 
-	var totalRiskLevel int
-	for i, row := range heightmap {
-		for j := range row {
-			if isLowPoint(i, j, heightmap) {
-				totalRiskLevel += 1 + heightmap[i][j]
-			}
-		}
-	}
-
-	printAnswer(totalRiskLevel)
-}
-
-func isLowPoint(i, j int, heightmap [][]int) bool {
 	rows := len(heightmap)
 	cols := len(heightmap[0])
-	pointHeight := heightmap[i][j]
-
 	neighbors := [][2]int{
 		{-1, 0},
 		{0, 1},
@@ -41,14 +26,29 @@ func isLowPoint(i, j int, heightmap [][]int) bool {
 		{0, -1},
 	}
 
-	for _, delta := range neighbors {
-		x, y := i+delta[0], j+delta[1]
-		if x >= 0 && x < rows && y >= 0 && y < cols {
-			if heightmap[x][y] <= pointHeight {
-				return false
+	isLowPoint := func(i, j int) bool {
+		currLocation := heightmap[i][j]
+
+		for _, delta := range neighbors {
+			x, y := i+delta[0], j+delta[1]
+			if x >= 0 && x < rows && y >= 0 && y < cols {
+				if heightmap[x][y] <= currLocation {
+					return false
+				}
+			}
+		}
+
+		return true
+	}
+
+	var totalRiskLevel int
+	for i := range rows {
+		for j := range cols {
+			if isLowPoint(i, j) {
+				totalRiskLevel += 1 + heightmap[i][j]
 			}
 		}
 	}
 
-	return true
+	printAnswer(totalRiskLevel)
 }
