@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	lines, printAnswer := utils.Init(filepath.Join("..", "input.example.txt"))
+	lines, printAnswer := utils.Init(filepath.Join("..", "input.txt"))
 
 	octopuses := make([][]int, len(lines))
 	for i, line := range lines {
@@ -18,12 +18,19 @@ func main() {
 		octopuses[i] = octopusRow
 	}
 
-	var flashes int
-	for range 100 {
-		step(octopuses, &flashes)
+	m, n := len(octopuses), len(octopuses[0])
+	var steps int
+	for {
+		var stepFlashes int
+		step(octopuses, &stepFlashes)
+		steps++
+		if stepFlashes == m*n {
+			break
+		}
+
 	}
 
-	printAnswer(flashes)
+	printAnswer(steps)
 }
 
 func step(octopuses [][]int, flashes *int) {
